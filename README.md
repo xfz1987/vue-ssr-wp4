@@ -33,6 +33,8 @@ eslint-plugin-standard
 ```
 
 3.git commit时自动eslint
-> git init
+> **注意**: 一定要先git init，再install husky
 > npm i -D husky
 > package.json >  "precommit": "npm run eslint-fix"
+
+4.升级到webpack4
