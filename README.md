@@ -1,40 +1,15 @@
-# VUE-SSR
+# About
+这是慕课网上[Vue+Webpack打造todo应用](https://www.imooc.com/learn/935)课程的源码
 
-## wepback配置需要说明的地方
-1.在开发环境中，想使用热更新，需要安装vue-style-loader,并且替换style-loader，否则css样式无法热更新
+# 使用方法
 ```
-{
-    test: /\.css$/,
-    use: [
-        {loader: 'vue-style-loader'},//style-loader
-        {loader:'css-loader',options:{minimize: false, importLoaders:1}},
-        {loader: 'postcss-loader',options:{sourceMap:true, config: {path: path.resolve(__dirname, '../postcss.config.js')} }}
-    ]
-},
+git clone https://github.com/Jokcy/vue-todo-tech.git
 ```
-
-2.开发过程中要eslint
-eslint
-eslint-config-standard
-eslint-loader
-eslint-plugin-html
-eslint-plugin-import
-eslint-plugin-node
-eslint-plugin-promise
-eslint-plugin-standard
+进入项目目录，运行
 ```
-{
-    "extends": "standard",
-    plugins: [
-        "html"
-    ],
-    "parser": "babel-eslint"
-}
+npm install
 ```
-
-3.git commit时自动eslint
-> **注意**: 一定要先git init，再install husky
-> npm i -D husky
-> package.json >  "precommit": "npm run eslint-fix"
-
-4.升级到webpack4
+然后执行
+```
+npm run dev
+开始开发项目
