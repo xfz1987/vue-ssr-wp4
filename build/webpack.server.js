@@ -66,10 +66,7 @@ const config = {
       		'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
       		'process.env.VUE_ENV': '"server"'
     	}),
-    	new ExtractPlugin({
-			filename: 'main.[checkHash:5].css',
-			allChunks: true
-		}),
+    	new ExtractPlugin('main.[Hash:5].css')
 	],
 	resolve: {
 		alias: {

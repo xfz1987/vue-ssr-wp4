@@ -12,7 +12,6 @@ const VueClientPlugin = require('vue-server-renderer/client-plugin')
 const isDev = process.env.NODE_ENV === 'development';
 
 const baseConfig = {
-	mode: process.env.NODE_ENV || 'development',
 	target: 'web',
 	module: {
 		rules: [
@@ -103,7 +102,7 @@ if(isDev){
 		plugins: [
 			new webpack.HotModuleReplacementPlugin(),
 			//减少无关错误信息的展示（webpack4干掉了）
-    		// new webpack.NoEmitOnErrorsPlugin(),
+    		new webpack.NoEmitOnErrorsPlugin(),
     		new HTMLPlugin({
     			template: path.join(__dirname, 'template.html'),
     			name: 'index.html'
@@ -135,28 +134,14 @@ if(isDev){
 				}
 			]
 		},
-		//提取公共文件（webapck4）
-		optimization: {			
-	       	splitChunks: {
-            	chunks: 'all',
-        	},
-        	runtimeChunk: true
-		},
 		plugins: [
-			// new ExtractPlugin('main.[Hash:5].css'),
-			new ExtractPlugin({
-				filename: 'main.[chunkhash:5].css',
-				allChunks: true
-			}),
-        	//webpack4 废弃掉了CommonsChunkPlugin
-        	//vendor一定要放在runtime之前，否则抽取不出来
-        	// new webpack.optimize.CommonsChunkPlugin({
-        	//     name: 'vendor'
-        	// }),
-        	// //提取webpack相关的恶心代码
-        	// new webpack.optimize.CommonsChunkPlugin({
-        	//     name: 'runtime'
-        	// }),
+			new ExtractPlugin('main.[Hash:5].css'),
+      		new webpack.optimize.CommonsChunkPlugin({
+      		  name: 'vendor'
+      		}),
+      		new webpack.optimize.CommonsChunkPlugin({
+      		  name: 'runtime'
+      		}),
         	new UglifyJSPlugin(),
         	// new HTMLPlugin(),
         	// 用来给异步组件重命名
