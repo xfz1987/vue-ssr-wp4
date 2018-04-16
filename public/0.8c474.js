@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[0],{3:function(t,s,i){"use strict";i.r(s);var e=i(0),n=Object(e.a)({props:["id"]},function(){var t=this.$createElement;return(this._self._c||t)("div",{staticClass:"test"},[this._v("路由通过props传递的参数 "+this._s(this.id))])},[],!1,function(t){i(7)},"data-v-4ee4f23f",null);s.default=n.exports},7:function(t,s){}}]);
