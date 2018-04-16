@@ -1,21 +1,14 @@
 <template>
     <div class="helper">
-        <span class="left">{{unFinishedTodoLength}} unchecked info</span>
-        <span class="tabs">
-            <span
-            v-for="state in states"
-            :key="state"
-            :class="[state, filter === state ? 'actived' : '']"
-            @click="toggleFilter(state)"
-            >{{state}}</span> 
-        </span>
-        <span class="clear" @click="clearAllCompleted()">
-            Clear CHECKED
-        </span>
+        <span class="left">{{unFinishedTodoLength}} items left</span>
+        <span class="clear" @click="clearAllCompleted()">Clear Completed</span>
     </div>
 </template>
 <script>
 export default {
+  metaInfo: {
+    title: 'Todo-List'
+  },
   props: {
     filter: {
       type: String,
@@ -26,17 +19,9 @@ export default {
       required: true
     }
   },
-  data () {
-    return {
-      states: ['ALL', 'UNCHECKED', 'CHECKED']
-    }
-  },
   methods: {
-    toggleFilter (state) {
-      this.$emit('toggle', state)
-    },
     clearAllCompleted () {
-      this.$emit('clear')
+      this.$emit('clearAllCompleted')
     }
   },
   computed: {

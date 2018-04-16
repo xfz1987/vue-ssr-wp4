@@ -1,7 +1,7 @@
 <template>
     <div :class="['todo-item',todo.completed ? 'completed' :'' ]">
-        <input type="checkbox" class="toggle" v-model="todo.completed">
-        <label> {{ todo.content }}</label>
+        <input type="checkbox" class="toggle" :checked="todo.completed" @click="handleToggle">
+        <label > {{ todo.content }}</label>
         <button class="destroy" @click="deleteTodo"> </button>
     </div>
 </template>
@@ -16,6 +16,10 @@ export default {
   methods: {
     deleteTodo () {
       this.$emit('delete', this.todo.id)
+    },
+    handleToggle (e) {
+      e.preventDefault()
+      this.$emit('toggle', this.todo)
     }
   }
 }
@@ -37,12 +41,10 @@ export default {
         display: block;
         line-height: 1.2;
         transition: color 0.4s;
-        &.completed{
-            &.label{
-                color: #d9d9d9;
-                text-decoration: line-through;
-            }
-        }
+    }
+    &.completed label{
+        color: #d9d9d9;
+        text-decoration: line-through;
     }
     & .toggle{
         text-align: center;
@@ -56,13 +58,13 @@ export default {
         outline: none;
         appearance: none;
         &:before{
-            content: url('../../assets/images/round.png');
+            content: url('../../assets/images/round.svg');
             position: absolute;
             left: 12px;
             cursor: pointer;
         }
         &:checked:before{
-            content: url('../../assets/images/done.png');
+            content: url('../../assets/images/done.svg');
             position: absolute;
             left: 12px;
             cursor: pointer;

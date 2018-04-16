@@ -1,47 +1,79 @@
 <template>
 	<section class="real-app">
-		<input type="text" class="add-input" placeholder="what to do?" @keyup.enter="addTodo"  autofocus>
-		<Item v-for="todo in filterdTodos" :key="todo.id" :todo="todo" @delete="deleteTodo"></Item>
-		<Tabs :filter="filter" :todos="todos" @toggle="toggleFilter" @clear="clearAllCompleted" />
+		<div class="tab-container">
+      <Tabs :value="filter" @change="handleChangeTab">
+        <Tab v-for="tab in stats" :key="tab" :label="tab" :index="tab"/>
+        <!-- <Tab label="tab1" index="1" />
+        <Tab label="tab2" index="2"><span slot="label" style="color:red">tab2</span></Tab>
+        <Tab label="tab3" index="3" /> -->
+      </Tabs>
+    </div>
+    <input type="text" class="add-input" placeholder="what to do?" @keyup.enter="handleAdd"  autofocus>
+		<Item v-for="todo in filterdTodos" :key="todo.id" :todo="todo" @delete="deleteTodo" @toggle="toggleTodoState"></Item>
+		<Helper :filter="filter" :todos="todos" @clearAllCompleted="clearAllCompleted" />
 	</section>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 import Item from './item.vue'
-import Tabs from './tabs.vue'
-let id = 0
+import Helper from './helper.vue'
+
 export default {
+  asyncData ({ store, router }) {
+    if (store.state.user) {
+      return store.dispatch('fetchTodos')
+    }
+    router.replace('/login')
+    return Promise.resolve()
+  },
   data () {
     return {
-      todos: [],
-      filter: 'ALL'
+      filter: 'all',
+      stats: ['all', 'active', 'completed']
     }
   },
   computed: {
+    ...mapState(['todos']),
     filterdTodos () {
-      if (this.filter === 'ALL') return this.todos
-      return this.todos.filter(_ => _.completed === (this.filter === 'CHECKED'))
+      if (this.filter === 'all') return this.todos
+      return this.todos.filter(_ => _.completed === (this.filter === 'completed'))
     }
   },
-  components: { Item, Tabs },
+  components: { Item, Helper },
+  mounted () {
+    if (this.todos && this.todos.length < 1) {
+      this.fetchTodos()
+    }
+  },
   methods: {
-    addTodo (e) {
-      if (e.target.value === '') return false
-      this.todos.unshift({
-        id: id++,
-        content: e.target.value.trim(),
-        completed: false
-      })
+    ...mapActions([
+      'fetchTodos',
+      'addTodo',
+      'deleteTodo',
+      'updateTodo',
+      'deleteAllCompleted'
+    ]),
+    handleAdd (e) {
+      const content = e.target.value.trim()
+      if (!content) {
+        this.$notify({ content: '必须输入要做的内容' })
+        return
+      }
+      this.addTodo({ content, completed: false })
       e.target.value = ''
     },
-    deleteTodo () {
-      this.todos.splice(this.todos.findIndex(todo => todo.id === id), 1)
-    },
-    toggleFilter (state) {
-      this.filter = state
-    },
     clearAllCompleted () {
-      this.todos = this.todos.filter(_ => !_.completed)
+      this.deleteAllCompleted()
+    },
+    handleChangeTab (value) {
+      this.filter = value
+    },
+    toggleTodoState (todo) {
+      this.updateTodo({
+        id: todo.id,
+        todo: Object.assign({}, todo, { completed: !todo.completed })
+      })
     }
   }
 }
@@ -71,5 +103,9 @@ export default {
     font-smoothing: antialiased;
     padding: 16px 16px 16px 60px;
     border: none;
+}
+.tab-container{
+  background-color: #fff;
+  padding: 0 15px;
 }
 </style>
